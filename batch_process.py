@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import os
-import glob
+from glob import glob
 import warnings
 import pandas as pd
 from tqdm.auto import tqdm
@@ -27,7 +27,7 @@ shorelines = gpd.read_file("../CoastSat/shorelines.geojson")
 shorelines = shorelines[shorelines.id.str.startswith("nzd")]
 transects = gpd.read_file("../CoastSat/transects_extended.geojson")
 
-print(f"{time.time() - start}: Reference polygons and shorelines loaded")
+print(f"{time.time() - start}: Reference shorelines and transects loaded")
 
 for sitename in tqdm(shorelines.id.unique()):
   shorelines[shorelines.id == sitename].to_file(f"Data/referenceLines/{sitename}.geojson")
