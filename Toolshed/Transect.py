@@ -26,7 +26,6 @@ from shapely.geometry import Point, LineString
 # Customise figure font style
 # Set up fonts for plots
 rcParams['font.family'] = 'sans-serif'
-rcParams['font.sans-serif'] = ['arial']
 rcParams['font.size'] = 10
 rcParams['text.usetex'] = False
 

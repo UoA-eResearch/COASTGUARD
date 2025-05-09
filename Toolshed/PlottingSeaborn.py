@@ -24,7 +24,6 @@ import seaborn as sns
 import matplotlib as mpl
 from matplotlib import cm
 import matplotlib.colors as pltcls
-mpl.use('Qt5Agg')
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 from matplotlib import gridspec
@@ -35,7 +34,6 @@ from matplotlib.lines import Line2D
 import matplotlib.patheffects as PathEffects
 import matplotlib.dates as mdates
 
-plt.ion()
 
 from shapely import geometry
 from shapely.geometry import Point, LineString

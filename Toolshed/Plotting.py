@@ -18,7 +18,6 @@ import pdb
 
 import matplotlib as mpl
 from matplotlib import cm
-mpl.use('Qt5Agg')
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 import matplotlib.patches as mpatches
@@ -29,7 +28,6 @@ from mpl_toolkits.axes_grid1.inset_locator import inset_axes
 import matplotlib.patheffects as PathEffects
 import matplotlib.font_manager as mplfm
 
-plt.ion()
 
 import rasterio
 import pandas as pd
@@ -44,7 +42,6 @@ from sklearn.decomposition import PCA
 
 
 mpl.rcParams.update(mpl.rcParamsDefault)
-mpl.rcParams['font.sans-serif'] = 'Arial'
 
 from Toolshed import Toolbox, Waves, PlottingSeaborn
 

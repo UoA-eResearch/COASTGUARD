@@ -37,7 +37,10 @@ from astropy.convolution import convolve
 import ee
 import geemap
 
-import pyfes
+try:
+    import pyfes
+except:
+    pass
 import netCDF4
 
 from Toolshed import Image_Processing

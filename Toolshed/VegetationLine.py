@@ -1812,8 +1812,6 @@ def show_detection(im_ms, cloud_mask, im_labels, im_ref_buffer, image_epsg, geor
         # else create a new figure
         fig = plt.figure()
         fig.set_size_inches([18, 9])
-        mng = plt.get_current_fig_manager()
-        mng.window.showMaximized()
         # according to the image shape, decide whether it is better to have the images
         # in vertical subplots or horizontal subplots
         if im_RGB.shape[1] > 2.5*im_RGB.shape[0]:
