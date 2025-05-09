@@ -270,7 +270,7 @@ def GetIntersections(BasePath, TransectGDF, ShorelineGDF):
     # for each column name
     for i in range(len(Key)):
         # for each transect
-        for Tr in range(len(TransectGDF['TransectID'])):
+        for Tr in TransectGDF['TransectID']:
             # refresh per-transect list
             TrKey = []
             # for each matching intersection on a single transect
