@@ -17,6 +17,7 @@ from Toolshed import (
 import ee
 import geopandas as gpd
 import time
+import sys
 
 start = time.time()
 
@@ -29,7 +30,11 @@ transects = gpd.read_file("../CoastSat/transects_extended.geojson")
 
 print(f"{time.time() - start}: Reference shorelines and transects loaded")
 
-for sitename in tqdm(shorelines.id.unique()):
+os.makedirs("Data/referenceLines", exist_ok=True)
+
+sys.stdout = open('batch.log', 'w')
+
+def process_site(sitename):
   shorelines[shorelines.id == sitename].to_file(f"Data/referenceLines/{sitename}.geojson")
 
   dates = ["1900-01-01", "2030-01-01"]
@@ -113,6 +118,8 @@ for sitename in tqdm(shorelines.id.unique()):
   output, output_latlon, output_proj = VegetationLine.extract_veglines(
       metadata, settings, polygon, dates
   )
+  output, output_latlon, output_proj = Toolbox.ReadOutput(inputs)
+  output = Toolbox.RemoveDuplicates(output) 
   print(output)
 
   # Save output veglines
@@ -145,4 +152,15 @@ for sitename in tqdm(shorelines.id.unique()):
       settings["inputs"]["sitename"],
       "transect_time_series.csv",
   )
+  df.sort_values(by="dates", inplace=True)
   df.to_csv(fn, index=False, float_format="%.2f")
+
+process_map(
+    process_site,
+    shorelines.id.unique(),
+    max_workers=32,
+    chunksize=1,
+    desc="Processing sites",
+    position=0,
+    leave=True,
+)
