@@ -154,6 +154,9 @@ def process_site(sitename):
             dt_lookup[dt][row.TransectID] = row.distances[i]
 
     df = pd.DataFrame(dt_lookup.values())
+    if df.empty:
+        print(f"No transect intersections found for {sitename}")
+        return
     fn = os.path.join(
         settings["inputs"]["filepath"],
         settings["inputs"]["sitename"],
