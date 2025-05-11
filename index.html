@@ -175,8 +175,7 @@
                 rmse: ${p.rmse?.toFixed(2)}<br>
                 site: ${p.site_id}<br>
                 <a href="${url}" target="_blank" class="link">Download CoastSat time series for ${p.site_id}</a><br>
-                <a href="${vedgesat_url}" target="_blank" class="link">Download VedgeSat time series for ${p.site_id}</a><br>
-                ${debug ? `<img id="img" style='height: 100%; width: 100%; object-fit: contain'>` : ""}
+                <a id="vedgesat_link" href="${vedgesat_url}" target="_blank" class="link">Download VedgeSat time series for ${p.site_id}</a><br>
               </div>`;
         if (r) {
           popupHTML += `
@@ -208,6 +207,7 @@
         }
         popupHTML += `
             </div>
+            ${debug ? `<img id="img" style='height: 100%; width: 100%; object-fit: contain'>` : ""}
             <div id="plot"></div>
             `
 
@@ -320,18 +320,6 @@
             console.log(px)
             px.y -= 400;
             map.panTo(map.unproject(px), { animate: true });
-            if (debug) {
-              $("#plot").on('plotly_hover plotly_click', function (event, data) {
-                console.log(data)
-                var d = data.points[0].x;
-                console.log(`Hovered on ${d}`)
-                var dt = dates[data.points[0].pointIndex].replace("+00:00", "").replace(/[ :]/g, "-");
-                var sat = satname[data.points[0].pointIndex]
-                var plot_url = `https://wave.storm-surge.cloud.edu.au/CoastSat_data/${p.site_id}/jpg_files/detection/${dt}_${sat}.jpg`
-                console.log(plot_url)
-                $("#img").attr("src", plot_url);
-              })
-            }
             if (p.site_id.startsWith("nzd")) {
               var url = `Data/${p.site_id}/transect_time_series.csv`
               Papa.parse(url, {
@@ -355,6 +343,29 @@
                     y: vedgesat_values,
                     line: {color: 'darkgreen'}
                   })
+                  if (debug) {
+                    $("#plot").on('plotly_hover plotly_click', function (event, data) {
+                      console.log(data)
+                      for (var i = 0; i < data.points.length; i++) {
+                        if (data.points[i].data.name == "VedgeSat chainage") {
+                          var d = data.points[i].x;
+                          console.log(`Hovered on ${d}`)
+                          var dt = d.split(" ")[0]
+                          var sat = vedgesat_satname[data.points[i].pointIndex]
+                          var plot_url = `https://wave.storm-surge.cloud.edu.au/VedgeSat_data/${p.site_id}/img_files/detection/${dt}_${sat}.jpg`
+                          console.log(plot_url)
+                          $("#img").attr("src", plot_url);
+                        }
+                      }
+                    })
+                  }
+                  $("#vedgesat_link").text(`Download VedgeSat time series for ${p.site_id}`)
+                  $("#vedgesat_link").attr("href", `Data/${p.site_id}/transect_time_series.csv`)
+                },
+                error: function (error) {
+                  console.log(error)
+                  $("#vedgesat_link").text("No VedgeSat data found for this transect")
+                  $("#vedgesat_link").attr("href", "#")
                 }
               })
             }
