@@ -89,10 +89,27 @@
       })
     }
 
-    var overlayMaps = {
+    var overlays = {
+      "Auckland sea walls": L.layerGroup().addTo(map)
     }
 
-    L.control.layers(baseMaps, overlayMaps, { position: "topleft" }).addTo(map);
+    $.getJSON("https://uoa-eresearch.github.io/CoastSat/aklc_seawalls.geojson", function (geojson) {
+      console.log(geojson)
+      L.geoJSON(geojson, {
+        style: function (feature) {
+          return { color: "magenta", weight: 5, opacity: 0.5 }
+        },
+        onEachFeature: function (feature, layer) {
+          var html = `
+              <h4>${feature.properties["SAPPARK_DATA.SITEDESCRIPTION"]}</h4>
+              <p><strong>Description:</strong> ${feature.properties["SAPPARK_DATA.DESCRIPTION"]}</p>`
+          layer.bindPopup(html);
+          layer.bindTooltip(html);
+        }
+      }).addTo(overlays["Auckland sea walls"])
+    })
+
+    L.control.layers(baseMaps, overlays, { position: "topleft" }).addTo(map);
 
     var cmap = chroma.scale('RdYlBu').domain([-3, 3])
 
@@ -340,7 +357,7 @@
                     name: "VedgeSat chainage",
                     x: dates,
                     y: vedgesat_values,
-                    line: {color: 'darkgreen'}
+                    line: { color: 'darkgreen' }
                   })
                   if (debug) {
                     $("#plot").on('plotly_hover plotly_click', function (event, data) {
